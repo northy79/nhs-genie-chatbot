@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NHS Genie Chatbot MVP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f8fb;
+            margin: 0;
+            padding: 0;
+        }
+        #chatbox {
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            margin: 40px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow-y: scroll;
+            padding: 20px;
+        }
+        .message {
+            margin-bottom: 15px;
+        }
+        .user {
+            text-align: right;
+            color: #0072ce;
+        }
+        .bot {
+            text-align: left;
+            color: #000;
+        }
+        #inputArea {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #userInput {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #sendBtn {
+            padding: 10px 20px;
+            background-color: #0072ce;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <div class="message bot">Hello, I’m NHS Genie 🤖<br>How can I help you today?</div>
+    </div>
+    <div id="inputArea">
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button id="sendBtn">Send</button>
+    </div>
+
+    <script>
+        const sendBtn = document.getElementById("sendBtn");
+        const userInput = document.getElementById("userInput");
+        const chatbox = document.getElementById("chatbox");
+
+        function addMessage(text, sender) {
+            const msg = document.createElement("div");
+            msg.classList.add("message", sender);
+            msg.innerHTML = text;
+            chatbox.appendChild(msg);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function getBotResponse(input) {
+            input = input.toLowerCase();
+            if (input.includes("appointment")) {
+                return "I can help you book an appointment. What day works for you?";
+            } else if (input.includes("sore throat") || input.includes("headache") || input.includes("symptom")) {
+                return "Based on your symptoms, I suggest speaking with a pharmacist or booking a GP appointment.";
+            } else if (input.includes("prescription")) {
+                return "You can request a repeat prescription through your GP's online services.";
+            } else if (input.includes("referral")) {
+                return "To send a referral letter, please contact your GP practice directly.";
+            } else if (input.includes("speak to human")) {
+                return "Okay, connecting you to a staff member now. Please wait...";
+            } else {
+                return "I'm here to help with bookings, symptoms, and NHS questions. Try asking about appointments or prescriptions.";
+            }
+        }
+
+        sendBtn.onclick = () => {
+            const input = userInput.value.trim();
+            if (input) {
+                addMessage(input, "user");
+                setTimeout(() => {
+                    const response = getBotResponse(input);
+                    addMessage(response, "bot");
+                }, 500);
+                userInput.value = "";
+            }
+        };
+    </script>
+</body>
+</html>
