@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NHS Genie AI Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f9ff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #0072ce;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    #chat-container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 10px;
+      background: white;
+      min-height: 60vh;
+      box-sizing: border-box;
+    }
+    .message {
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 8px;
+    }
+    .user {
+      background-color: #d6eaff;
+      text-align: right;
+    }
+    .bot {
+      background-color: #f1f1f1;
+      text-align: left;
+    }
+    #input-area {
+      display: flex;
+      padding: 10px;
+      gap: 8px;
+      background: #fff;
+      box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+    }
+    #user-input {
+      flex: 1;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px;
+      border: none;
+      background: #0072ce;
+      color: white;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+    #help-btn {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background-color: #ffcc00;
+      color: #333;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    #gp-search {
+      display: flex;
+      padding: 10px;
+      gap: 8px;
+    }
+    #gp-postcode {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🤖 NHS Genie AI Chatbot</h1>
+    <p>Ask anything about NHS appointments, symptoms, or support</p>
+  </header>
+
+  <div id="chat-container">
+    <div class="message bot">Hello, I'm NHS Genie. How can I help you today?</div>
+  </div>
+
+  <div id="gp-search">
+    <input type="text" id="gp-postcode" placeholder="Enter postcode to find nearest GP" />
+    <button onclick="findGP()">Find GP</button>
+  </div>
+
+  <div id="input-area">
+    <input type="text" id="user-input" placeholder="Type your question..." />
+    <button onclick="handleSend()">Send</button>
+  </div>
+
+  <button id="help-btn" onclick="showHelp()">❓ Help</button>
+
+  <script>
+    const chatContainer = document.getElementById("chat-container");
+
+    function addMessage(text, sender) {
+      const div = document.createElement("div");
+      div.className = "message " + sender;
+      div.innerText = text;
+      chatContainer.appendChild(div);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function fakeGPTResponse(input) {
+      input = input.toLowerCase();
+      if (input.includes("appointment")) {
+        return "You can book an NHS appointment via your GP or 111. Would you like help?";
+      } else if (input.includes("prescription")) {
+        return "For prescriptions, please contact your GP or use the NHS App.";
+      } else if (input.includes("referral")) {
+        return "Referrals must go through a GP. Would you like to speak to one?";
+      } else if (input.includes("mental health")) {
+        return "You can call NHS 111 or access Mind UK for support. Need links?";
+      } else if (input.includes("sore throat") || input.includes("chest pain")) {
+        return "If symptoms are severe, contact NHS 111 or visit A&E.";
+      } else {
+        return "I'm here to help with NHS bookings, prescriptions and advice. Ask me anything!";
+      }
+    }
+
+    function handleSend() {
+      const input = document.getElementById("user-input");
+      const text = input.value.trim();
+      if (text !== "") {
+        addMessage(text, "user");
+        setTimeout(() => {
+          const reply = fakeGPTResponse(text);
+          addMessage(reply, "bot");
+        }, 600);
+        input.value = "";
+      }
+    }
+
+    function showHelp() {
+      addMessage("Need help? Try asking me about symptoms, GP bookings, or prescriptions. You can also search for your nearest GP using your postcode below.", "bot");
+    }
+
+    function findGP() {
+      const postcode = document.getElementById("gp-postcode").value.trim();
+      if (postcode === "") {
+        alert("Please enter a postcode.");
+        return;
+      }
+      addMessage(`Searching for nearest GP to "${postcode}"...`, "bot");
+      setTimeout(() => {
+        addMessage("Here's a simulated GP near you: <br><strong>City Health Centre</strong><br>123 NHS Street, YourTown<br>📞 01234 567890", "bot");
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
